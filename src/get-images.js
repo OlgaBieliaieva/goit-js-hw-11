@@ -19,9 +19,8 @@ export async function getImages(value) {
   const options = new URLSearchParams(REQUEST_OPTIONS);
   try {
     const response = await axios.get(`${BASE_URL}${options}`);
-    const images = await response;
     REQUEST_OPTIONS.page += 1;
-    return images;
+    return response;
   } catch (error) {
     console.log(error);
   }
