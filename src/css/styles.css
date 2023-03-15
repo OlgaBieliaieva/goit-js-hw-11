@@ -1,7 +1,9 @@
 body {
-  position: relative;
+  position: absolute;
   margin: 0 8px;
+  width: 100%;
 }
+
 img {
   display: block;
   width: 100%;
@@ -9,53 +11,65 @@ img {
   object-fit: cover;
 }
 
-a {
-  text-decoration: none;
-  color: black;
-}
-
-.search-form {
-  position: fixed;
-  display: flex;
-  justify-content: center;
-  gap: 5px;
-  padding: 20px;
-  width: 100%;
-  background-color: rgb(69, 121, 112);
-  font-size: 36px;
-}
-
 input {
   padding: 7px;
 }
 
 button {
+  background-color: #2196f3;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
   padding: 7px;
   font-weight: 700;
 }
 
 button:hover {
-  background-color: rgb(189, 188, 188);
-  cursor: pointer;
+  background-color: #188ce8;
 }
+
+.search-form {
+  position: fixed;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  padding: 20px;
+  width: 100%;
+  background-color: #f5f4fa;
+  font-size: 36px;
+}
+
 .gallery {
   display: flex;
   flex-wrap: wrap;
   flex-basis: calc((100% - 60px) / 3);
   justify-content: center;
   gap: 30px;
-  margin: 0 auto;
-  margin-bottom: 80px;
+  margin-top: 80px;
+  margin-bottom: 30px;
   padding: 0;
 }
 
-.photo-card {
+.item {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   text-align: center;
   height: 250px;
   width: 300px;
+  padding: 7px;
+  text-decoration: none;
+  color: black;
+  transition: box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.item:hover {
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.12), 0px 4px 4px rgba(0, 0, 0, 0.06),
+    1px 4px 6px rgba(0, 0, 0, 0.16);
 }
 
 .info {
@@ -63,4 +77,15 @@ button:hover {
   text-align: center;
   gap: 5px;
   height: 50px;
+}
+
+.load-more {
+  display: block;
+  margin: 0 auto;
+}
+
+.is-hidden {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }

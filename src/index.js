@@ -8,29 +8,34 @@ const refs = {
   searchForm: document.querySelector('.search-form'),
   searchFormInput: document.querySelector('.search-form input'),
   gallery: document.querySelector('.gallery'),
+  loadMoreBtn: document.querySelector('.load-more'),
 };
 
 refs.searchForm.addEventListener('submit', onSearch);
+refs.loadMoreBtn.addEventListener('click', onLoadMore);
+
+let queryValue = '';
 
 function onSearch(event) {
   event.preventDefault();
 
   refs.gallery.innerHTML = '';
+  refs.loadMoreBtn.classList.add('is-hidden');
 
   const {
     elements: { searchQuery },
   } = event.currentTarget;
 
-  const queryValue = searchQuery.value.trim().toLowerCase();
+  queryValue = searchQuery.value.trim().toLowerCase();
 
   if (queryValue.length === 0) {
     return;
   }
 
-  getImages(queryValue).then(showResult).catch(showError);
+  getImages(queryValue).then(checkResult).catch(showError);
 }
 
-function showResult(result) {
+function checkResult(result) {
   if (result.data.total === 0) {
     Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
@@ -38,9 +43,8 @@ function showResult(result) {
     refs.searchFormInput.value = '';
     return;
   } else {
-    Notify.info(`Hooray! We found ${result.data.total} images.`);
+    Notify.info(`Hooray! We found ${result.data.totalHits} images.`);
   }
-  console.log(result);
   createGalleryMarkup(result.data.hits);
 }
 
@@ -49,7 +53,6 @@ function showError(error) {
 }
 
 function createGalleryMarkup(data) {
-  console.log(data);
   const galleryMarkup = data
     .map(
       element => `<a class="item" href="${element.largeImageURL}">
@@ -72,12 +75,28 @@ function createGalleryMarkup(data) {
 </div></a>`
     )
     .join('');
-  addMarkup(galleryMarkup);
+  showGallery(galleryMarkup);
 }
 
-function addMarkup(markup) {
+function showGallery(markup) {
   refs.gallery.insertAdjacentHTML('beforeend', markup);
+  refs.loadMoreBtn.classList.remove('is-hidden');
 
   const lightbox = new SimpleLightbox('.gallery a');
   lightbox.refresh();
+}
+
+function onLoadMore() {
+  getImages(queryValue).then(checkLoadMoreResult).catch(showError);
+}
+
+function checkLoadMoreResult(result) {
+  if (result.data.hits.length === 0) {
+    Notify.warning(
+      "We're sorry, but you've reached the end of search results."
+    );
+    refs.loadMoreBtn.classList.add('is-hidden');
+    return;
+  }
+  createGalleryMarkup(result.data.hits);
 }
